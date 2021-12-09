@@ -30,4 +30,5 @@ func main() {
 	for i, val := range age3 {
 		fmt.Println(age3[i], "===>", i, "->", val)
 	}
+
 }
