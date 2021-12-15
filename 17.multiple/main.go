@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	//bmis := []float64{1,2,3,4,5}
-	avgBmi := calculateAvg(12, 3, 5, 6, 7)
+	avgBmi := calculateAvg()
 	a := make([]float64, 3, 3)
 	avgBmi1 := calculateAvgOnSlice(a)
 	fmt.Println(avgBmi)

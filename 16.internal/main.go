@@ -25,8 +25,8 @@ func main() {
 	arr3 := make([]int, 5, 5)
 	copy(arr3, arr2)
 	fmt.Println(arr3)
-
-	i := 333
+	i := new(int)
 	j := &i
+	fmt.Println(reflect.TypeOf(i))
 	fmt.Println(reflect.TypeOf(j))
 }
