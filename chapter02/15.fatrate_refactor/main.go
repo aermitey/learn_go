@@ -2,11 +2,16 @@ package main
 
 import (
 	"fmt"
-	"learngo/15.fatrate_refactor/calc"
+	calc2 "learngo/chapter02/15.fatrate_refactor/calc"
+	"learngo/chapter03/01.fatrate_refactor/calc"
 	"runtime/debug"
 )
 
 func main() {
+	//age := 23
+	//sex := "男"
+	//bmi := 0.23
+	//fmt.Println(calc2.CalcFatRate(bmi, age, sex))
 	for {
 		mainFateRateBody()
 		if cont := whetherContinue(); !cont {
@@ -25,7 +30,11 @@ func recoverMainBody() {
 func mainFateRateBody() {
 	defer recoverMainBody()
 	weight, tall, age, _, sex := getMaterialsFromInput()
-	fatRate := calcFateRate(weight, tall, age, sex)
+	fatRate, err := calcFateRate(weight, tall, age, sex)
+	if err != nil {
+		fmt.Println("计算体脂率出错:", err)
+		return
+	}
 	if fatRate <= 0 {
 		panic("fatRate is not allowed to be negative")
 	}
@@ -95,12 +104,15 @@ func getHealthinessSuggestionsForFemale(age int, fatRate float64) {
 	}
 }
 
-func calcFateRate(weight float64, tall float64, age int, sex string) float64 {
+func calcFateRate(weight float64, tall float64, age int, sex string) (fatRate float64, err error) {
 	//计算体质
-	bmi := calc.CalcBMI(tall, weight)
-	fatRate := calc.CalcFatRate(bmi, age, sex)
+	bmi, err := calc2.CalcBMI(tall, weight)
+	if err != nil {
+		return 0, err
+	}
+	fatRate = calc.CalcFatRate(bmi, age, sex)
 	fmt.Println("体脂率是：", fatRate)
-	return fatRate
+	return
 }
 
 func getMaterialsFromInput() (float64, float64, int, int, string) {

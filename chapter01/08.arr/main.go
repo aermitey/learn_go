@@ -49,7 +49,7 @@ func main() {
 	newPersonInfo3[2] = append(newPersonInfo3[2],
 		[3]string{"小强", "男", "在职"},
 	)
-	fmt.Println(newPersonInfo3[2])
+	fmt.Println(newPersonInfo3)
 	//for d1, val := range newPersonInfo3 {
 	//	a := val
 	//	for d2, val := range a {
