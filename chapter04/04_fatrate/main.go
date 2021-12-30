@@ -16,6 +16,7 @@ func main() {
 	}
 	fmt.Println(person)
 	fmt.Println(suggestion)
+	fmt.Println(c)
 }
 
 func getPersonInfoFromInput() *Person {
