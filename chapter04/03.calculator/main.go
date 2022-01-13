@@ -3,21 +3,33 @@ package main
 import "fmt"
 
 func main() {
-	a := new(Calculator)
-	b := Calculator{
-		2,
+	a, b := 1, 2
+	c := Calculator{
+		A: a,
+		B: b,
 	}
-	a.A = 1
+	fmt.Println(c.add(), c.C)
+	newC := &NewCalculator{&Calculator{}}
+	newC.Calculator.A = 12
+	newC.Calculator.B = 20
 
-	fmt.Println(Calculator{})
-	fmt.Println(c{})
-	fmt.Println(b)
-
+	m := &MyCommand{commandOptions: map[string]string{}}
+	m.commandOptions["aa"] = "AAA"
+	m.abc = 2
+	m.ToCmdStr(3)
+	fmt.Println(m)
 }
 
-type c struct {
-	calc *Calculator
+type MyCommand struct {
+	commandOptions map[string]string
+	abc            int
 }
-type Calculator struct {
-	A int
+
+func (m *MyCommand) ToCmdStr(l int) string {
+	out := ""
+	for s, s2 := range m.commandOptions {
+		out = out + fmt.Sprintf("--%s=%s+%d", s, s2, l)
+	}
+	m.abc = l
+	return out
 }

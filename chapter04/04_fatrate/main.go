@@ -5,18 +5,12 @@ import (
 )
 
 func main() {
-	person := getPersonInfoFromInput()
-	c := Calc{}
-	s := FatRateSuggestion{}
-	c.BMI(person)
-	c.FatRate(person)
-	suggestion, err := s.GetSuggestion(person)
-	if err != nil {
-		return
+	frSvc := &fatRateService{s: GetFatRateSuggestions()}
+
+	for {
+		person := getPersonInfoFromInput()
+		fmt.Println(frSvc.GiveSuggestionToPerson(person))
 	}
-	fmt.Println(person)
-	fmt.Println(suggestion)
-	fmt.Println(c)
 }
 
 func getPersonInfoFromInput() *Person {
