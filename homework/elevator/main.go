@@ -10,6 +10,9 @@ func main() {
 	s := service{
 		ele: e,
 	}
-	s.ele.add(10, 10, 10, 7, 6, 3, 1)
+	s.ele.add(10, 15, 16, 7, 6, 3, 1)
+	go func() {
+		s.ele.add(5, 13, 2)
+	}()
 	fmt.Println(s.ElevatorOperation(e))
 }

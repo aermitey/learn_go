@@ -11,5 +11,8 @@ func main() {
 		ele: e,
 	}
 	s.ele.add(10, 3, 7, 8, 5, 16, 15, 19)
+	go func() {
+		s.ele.add(12, 17, 18)
+	}()
 	fmt.Println(s.ElevatorOperation(e))
 }
