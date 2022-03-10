@@ -98,7 +98,7 @@ func getHealthinessSuggestionsForFemale(age int, fatRate float64) {
 func calcFateRate(weight float64, tall float64, age int, sex string) float64 {
 	//计算体质
 	bmi := calc2.CalcBMI(tall, weight)
-	fatRate := calc2.CalcFatRate(bmi, age, sex)
+	fatRate := calc2.FatRateFromBMI(bmi, age, sex)
 	fmt.Println("体脂率是：", fatRate)
 	return fatRate
 }

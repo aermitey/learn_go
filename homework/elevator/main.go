@@ -5,11 +5,10 @@ import (
 	"time"
 )
 
+var s elevator
+
 func main() {
-	e := &elevator{
-		floor:  10,
-		status: 0,
-	}
+	e := &elevator{}
 	s := service{
 		ele: e,
 	}
@@ -19,4 +18,15 @@ func main() {
 		s.ele.add(5, 13, 2)
 	}()
 	fmt.Println(s.ElevatorOperation(e))
+	//s := []string{"1", "2"}
+	//for i, v := range s {
+	//	fmt.Printf("%p,%p\n", &s[i], &v)
+	//}
+	//os.Exit(1)
 }
+
+//type A interface {
+//	Push() error
+//}
+//
+//type a struct{}

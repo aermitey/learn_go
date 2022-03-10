@@ -28,7 +28,7 @@ func (p *Person) calcBmi() error {
 }
 
 func (p *Person) calcFatRate() error {
-	fatRate, err := calc.CalcFatRate(p.bmi, p.age, p.sex)
+	fatRate, err := calc.FatRateFromBMI(p.bmi, p.age, p.sex)
 	if err != nil {
 		log.Printf("error when calculating fatRate for Person[%s]: %v", p.name, err)
 	}

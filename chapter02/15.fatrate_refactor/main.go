@@ -11,7 +11,7 @@ func main() {
 	//age := 23
 	//sex := "男"
 	//bmi := 0.23
-	//fmt.Println(calc2.CalcFatRate(bmi, age, sex))
+	//fmt.Println(calc2.FatRateFromBMI(bmi, age, sex))
 	for {
 		mainFateRateBody()
 		if cont := whetherContinue(); !cont {

@@ -1,7 +1,7 @@
 package main
 
 type service struct {
-	ele elevatorOperation
+	ele ElevatorOperation
 }
 
 func (s service) ElevatorOperation(e *elevator) (err error) {

@@ -2,19 +2,18 @@ package calc
 
 import "fmt"
 
-func CalcFatRate(bmi float64, age int, sex string) (fatRate float64, err error) {
+func FatRateFromBMI(bmi float64, age int, sex string) (fatRate float64, err error) {
 	sexWeight := 0
 	if sex == "男" {
 		sexWeight = 1
-	} else if sex == "男" {
+	} else if sex == "女" {
 		sexWeight = 0
 	} else {
 		err = fmt.Errorf("未识别性别:%s", sex)
 		return
 	}
-	ageWeight, ageErr := getAgeWeight(age)
-	if ageErr != nil {
-		err = ageErr
+	ageWeight, err := getAgeWeight(age)
+	if err != nil {
 		return
 	}
 	fatRate = (1.2*bmi + ageWeight*float64(age) - 5.4 - 10.8*float64(sexWeight)) / 100

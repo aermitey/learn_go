@@ -1,6 +1,6 @@
 package main
 
-type elevatorOperation interface {
+type ElevatorOperation interface {
 	add(...int)
 	arrive(int) error
 	up() error
