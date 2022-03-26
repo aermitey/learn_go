@@ -25,7 +25,7 @@ func main() {
 	//os.Exit(1)
 }
 
-//type A interface {
+//type A frInterface {
 //	Push() error
 //}
 //

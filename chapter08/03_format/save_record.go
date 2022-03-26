@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
-	proto2 "learngo/pkg/apis/proto"
+	proto2 "learngo/pkg/apis"
 	"log"
 	"os"
 )

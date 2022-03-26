@@ -3,7 +3,7 @@ package main
 import (
 	gobmi "github.com/armstrongli/go-bmi"
 	"learngo/chapter02/15.fatrate_refactor/calc"
-	"learngo/pkg/apis/proto"
+	"learngo/pkg/apis"
 	"log"
 )
 
@@ -11,7 +11,7 @@ type Calc struct {
 	continental string
 }
 
-func (c *Calc) BMI(person *proto.PersonalInformation) (bmi float64, err error) {
+func (c *Calc) BMI(person *apis.PersonalInformation) (bmi float64, err error) {
 	bmi, err = gobmi.BMI(float64(person.Weight), float64(person.Tall))
 	if err != nil {
 		log.Println("error when calculating bmi", err)
@@ -20,7 +20,7 @@ func (c *Calc) BMI(person *proto.PersonalInformation) (bmi float64, err error) {
 	return bmi, nil
 }
 
-func (c *Calc) FatRate(person *proto.PersonalInformation) (fatRate float64, err error) {
+func (c *Calc) FatRate(person *apis.PersonalInformation) (fatRate float64, err error) {
 	bmi, err := c.BMI(person)
 	if err != nil {
 		return 0, err

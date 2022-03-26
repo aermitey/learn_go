@@ -6,14 +6,13 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
-	proto2 "learngo/pkg/apis/proto"
 	"log"
 	"reflect"
 	"testing"
 )
 
 func TestMarshalJson(t *testing.T) { //json只适用于大写(可导出)的变量，改为小写之后序列化之后的json文件中会不会出现相关数据
-	personalInformation := proto2.PersonalInformation{
+	personalInformation := PersonalInformation{
 		Name:   "小强...'",
 		Sex:    "男",
 		Tall:   1.70,
@@ -45,7 +44,7 @@ func TestUnmarshalJson(t *testing.T) {
 }
 
 func TestMarshalYaml(t *testing.T) { //支持json注解，不同的数据不能放在同一行，可以注释
-	personalInformation := proto2.PersonalInformation{
+	personalInformation := PersonalInformation{
 		Name:   "小强...'",
 		Sex:    "男",
 		Tall:   1.70,
@@ -70,13 +69,13 @@ sex: 男
 tall: 1.7
 weight: 71
 age: 35`
-	personalInformation := proto2.PersonalInformation{}
+	personalInformation := PersonalInformation{}
 	yaml.Unmarshal([]byte(data), &personalInformation)
 	fmt.Println(personalInformation)
 }
 
 func TestMarshalProtobuf(t *testing.T) {
-	personalInformation := proto2.PersonalInformation{
+	personalInformation := PersonalInformation{
 		Name:   "小强...'",
 		Sex:    "男",
 		Tall:   1.70,

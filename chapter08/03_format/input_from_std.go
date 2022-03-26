@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"learngo/pkg/apis/proto"
+	"learngo/pkg/apis"
 )
 
 type inputFromStd struct {
 }
 
-func (i *inputFromStd) GetInPut() *proto.PersonalInformation {
+func (i *inputFromStd) GetInPut() *apis.PersonalInformation {
 	//录入各项数据
 	var name string
 	fmt.Print("姓名：")
@@ -30,7 +30,7 @@ func (i *inputFromStd) GetInPut() *proto.PersonalInformation {
 	fmt.Print("性别（男/女）：")
 	fmt.Scanln(&sex)
 
-	return &proto.PersonalInformation{
+	return &apis.PersonalInformation{
 		Name:   name,
 		Sex:    sex,
 		Tall:   float32(tall),

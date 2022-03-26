@@ -6,7 +6,7 @@ import (
 	gobmi "github.com/armstrongli/go-bmi"
 	"io/ioutil"
 	"learngo/chapter02/15.fatrate_refactor/calc"
-	"learngo/pkg/apis/proto"
+	"learngo/pkg/apis"
 	"log"
 	"os"
 )
@@ -39,7 +39,7 @@ func main() {
 func caseStudy() {
 	filePath := "/Users/chenxi/go/src/learngo/chapter08/testFatRate.json"
 
-	personalInformation := proto.PersonalInformation{
+	personalInformation := apis.PersonalInformation{
 		Name:   "小强...'",
 		Sex:    "男",
 		Tall:   1.70,
@@ -66,7 +66,7 @@ func readFile(filePath string) {
 		fmt.Println("读取文件失败:", err)
 		return
 	}
-	personalInformation := proto.PersonalInformation{}
+	personalInformation := apis.PersonalInformation{}
 	err = json.Unmarshal(data, &personalInformation)
 	if err != nil {
 		log.Fatal("错误：", err)

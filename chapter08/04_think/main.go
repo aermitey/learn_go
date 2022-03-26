@@ -6,7 +6,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	proto2 "learngo/pkg/apis/proto"
+	proto2 "learngo/pkg/apis"
 	"log"
 	"time"
 )
