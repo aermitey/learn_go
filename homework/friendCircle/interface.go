@@ -1,6 +1,8 @@
 package main
 
-import "learngo/pkg/apis"
+import (
+	"learngo/pkg/apis"
+)
 
 type CircleInterface interface {
 	PostingStatus(fc *apis.FriendCircle) error

@@ -65,10 +65,10 @@ func TestMarshalYaml(t *testing.T) { //支持json注解，不同的数据不能�
 func TestUnmarshalYaml(t *testing.T) {
 	//同理反序列化时，非可导出变量的数据会丢失变为空
 	data := `name: 小强...'
-sex: 男
-tall: 1.7
-weight: 71
-age: 35`
+			sex: 男
+			tall: 1.7
+			weight: 71
+			age: 35`
 	personalInformation := PersonalInformation{}
 	yaml.Unmarshal([]byte(data), &personalInformation)
 	fmt.Println(personalInformation)
