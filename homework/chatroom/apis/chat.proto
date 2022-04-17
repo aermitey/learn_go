@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option go_package = "/proto";
+
+service ChatService {
+  rpc Register(Account) returns (User){}
+  rpc Login(Account) returns (User){}
+  rpc ChatList(Num) returns (UserList){}
+  rpc ChatHistory(Num) returns (ChatLogList){}
+  rpc ChatWith(Num) returns (Empty){}
+  rpc WatchChatRoom(Empty) returns (ChatLog){}
+}
+
+service ChatCouple {
+  rpc MakeChatRoom(Num) returns (ChatLogList){}
+  rpc SendChatContent(Content) returns (Empty){}
+  rpc ReceiveChatContent(Empty) returns (ChatLog){}
+}
+
+message Empty {
+}
+
+message Num {
+  int64 num = 1;
+}
+
+message Content {
+  int64 account = 1;
+  string content = 2;
+}
+
+message UserList {
+  repeated User items = 1;
+}
+
+message User{
+  // @gotags: gorm:"column:account"
+  int64 account = 1;
+  // @gotags: gorm:"column:nickname"
+  string nickname = 2;
+}
+
+message Account {
+  // @gotags: gorm:"primaryKey;column:id"
+  int64 id = 1;
+  // @gotags: gorm:"column:account"
+  int64 account = 2;
+  // @gotags: gorm:"column:password"
+  string password = 3;
+  // @gotags: gorm:"column:nickname"
+  string nickname = 4;
+  // @gotags: gorm:"column:online"
+  string online = 5;
+  // @gotags: gorm:"column:weight"
+  string addTime = 6;
+}
+
+message ChatLogList {
+  repeated ChatLog items = 1;
+}
+
+message ChatLog {
+  // @gotags: gorm:"primaryKey;column:id"
+  int64 id = 1;
+  // @gotags: gorm:"column:talker_account"
+  int64 talkerAccount = 2;
+  // @gotags: gorm:"column:talker_nickname"
+  string talkerNickname = 3;
+  // @gotags: gorm:"column:listener_account"
+  int64 listenerAccount = 4;
+  // @gotags: gorm:"column:listener_nickname"
+  string listenerNickname = 5;
+  // @gotags: gorm:"column:chat_content"
+  string chatContent = 6;
+  // @gotags: gorm:"column:chat_time"
+  string chatTime = 7;
+}
