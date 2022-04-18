@@ -1,4 +1,4 @@
-package main
+package ranks
 
 import (
 	"learngo/chapter02/15.fatrate_refactor/calc"
@@ -62,7 +62,7 @@ func (f *FatRateRank) GetFatRate(name string) (*apis.PersonalRank, error) {
 		Name:       name,
 		Sex:        sex,
 		RankNumber: int64(rankId),
-		FatRate: float32(fr),
+		FatRate:    float32(fr),
 	}, nil
 }
 
@@ -143,7 +143,7 @@ func (f *FatRateRank) getTopRank() []*apis.PersonalRank {
 			Name:       f.items[i].Name,
 			Sex:        f.items[i].Sex,
 			RankNumber: int64(i),
-			FatRate: float32(f.items[i].FatRate),
+			FatRate:    float32(f.items[i].FatRate),
 		})
 	}
 	return out

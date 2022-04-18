@@ -15,7 +15,7 @@ func main() {
 	}
 	defer file.Close()
 
-	b := make([]byte, 100)
+	b := make([]byte, 1000)
 	var n int
 	for i := 0; i < 2; i++ {
 		n, err = file.Read(b) //将读取到的数据放入b切片

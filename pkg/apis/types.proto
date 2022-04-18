@@ -2,15 +2,33 @@ syntax = "proto3";
 
 option go_package = "/proto";
 
-import "google/protobuf/empty.proto";
-
 service RankService {
   rpc Register(PersonalInformation) returns (PersonalInformation){}
+  rpc Update(PersonalInformation) returns (PersonalInformationFatRate){}
+  rpc GetFatRate(PersonalInformation) returns (PersonalRank){}
+  rpc GetTop(Empty) returns (PersonalRanks){}
+
   rpc RegisterPersons(stream PersonalInformation) returns (PersonalInformationList){}
-  rpc WatchPersons(google.protobuf.Empty) returns (stream PersonalInformation){}
+  rpc WatchPersons(Empty) returns (stream PersonalInformation){}
 }
 
 message Empty {
+}
+
+message PersonalRanks {
+  repeated PersonalRank personalRanks = 1;
+}
+
+message PersonalRank{
+  string name = 1;
+  string sex = 2;
+  int64 rankNumber = 3;
+  float fatRate = 4;
+}
+
+message PersonalInformationFatRate {
+  string name = 1;
+  float fatRate = 2;
 }
 
 message PersonalInformationList {

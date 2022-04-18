@@ -9,8 +9,8 @@ import (
 func main() {
 	//withCancel()
 	//withTimeOut()
-	//withValue()
-	withDeadline()
+	withValue()
+	//withDeadline()
 }
 
 func withCancel() {

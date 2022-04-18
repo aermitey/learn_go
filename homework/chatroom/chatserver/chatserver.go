@@ -27,13 +27,26 @@ type ChatServer struct {
 
 type ChatCouple struct {
 	conn           *gorm.DB
+	sourceAccount int64
+	targetAccount int64
 	sourceToTarget chan *proto.ChatLog
 	targetToSource chan *proto.ChatLog
 	proto.UnimplementedChatCoupleServer
 }
 
-func (c *ChatCouple) MakeChatRoom(ctx context.Context, ch chan *proto.ChatLog, content *proto.Content) (*proto.Empty, error) {
-
+func (c *ChatCouple) MakeChatRoom(ctx context.Context, num *proto.Num) (*ChatCouple, error) {
+	value := ctx.Value("SourceAccount")
+	if user, ok := value.(proto.User); ok {
+		return &ChatCouple{
+			conn:                          c.conn,
+			sourceAccount:                 user.Account,
+			targetAccount:                 num.Num,
+			sourceToTarget:                make(chan *proto.ChatLog),
+			targetToSource:                make(chan *proto.ChatLog),
+		}, nil
+	}
+	err := fmt.Errorf("未获取正确的参数")
+	return nil, err
 }
 
 func (c *ChatCouple) SendChatContent(ctx context.Context, ch chan *proto.ChatLog, content *proto.Content) (*proto.Empty, error) {
@@ -59,7 +72,7 @@ func (c *ChatCouple) SendChatContent(ctx context.Context, ch chan *proto.ChatLog
 	return nil, err
 }
 
-func (c *ChatCouple) ReceiveChatContent(ctx context.Context, ch chan *proto.ChatLog, empty *proto.Empty) (*proto.ChatLog, error) {
+func (c *ChatCouple) ReceiveChatContent(ctx context.Context, ch chan *proto.ChatLog) (*proto.ChatLog, error) {
 	return <-ch, nil
 }
 
@@ -154,13 +167,32 @@ func (c *ChatServer) ChatHistory(ctx context.Context, num *proto.Num) (*proto.Ch
 	return nil, err
 }
 
-func (c *ChatServer) ChatWith(ctx context.Context, num *proto.Num) (*proto.Empty, error) {
-	c.ChatCouple.MakeChatRoom(&ChatCouple{
-		conn:           c.conn,
-		sourceToTarget: nil,
-		targetToSource: nil,
-	})
+func (c *ChatServer) ChatWith(ctx context.Context, num *proto.Num, content *proto.Content) (*proto.Empty, error) {
+	_, err := c.ChatCouple.SendChatContent(ctx, c.ChatCouple.sourceToTarget, content)
+	if err != nil {
+		return nil, err
+	}
+	chatContent, err := c.ChatCouple.ReceiveChatContent(ctx, c.ChatCouple.targetToSource)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Sprintf("%s", chatContent)
+	return nil, nil
 }
+
+func (c *ChatServer) ReceiveSend(ctx context.Context, num *proto.Num, content *proto.Content) (*proto.Empty, error) {
+	_, err := c.ChatCouple.SendChatContent(ctx, c.ChatCouple.targetToSource, content)
+	if err != nil {
+		return nil, err
+	}
+	chatContent, err := c.ChatCouple.ReceiveChatContent(ctx, c.ChatCouple.sourceToTarget)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Sprintf("%s", chatContent)
+	return nil, nil
+}
+
 
 func (c *ChatServer) WatchChatRoom(ctx context.Context, empty *proto.Empty) (*proto.ChatLog, error) {
 	value := ctx.Value("SourceAccount")

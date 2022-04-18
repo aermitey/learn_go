@@ -23,7 +23,11 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RankServiceClient interface {
 	Register(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalInformation, error)
+	Update(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalInformationFatRate, error)
+	GetFatRate(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalRank, error)
+	GetTop(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PersonalRanks, error)
 	RegisterPersons(ctx context.Context, opts ...grpc.CallOption) (RankService_RegisterPersonsClient, error)
+	WatchPersons(ctx context.Context, in *Empty, opts ...grpc.CallOption) (RankService_WatchPersonsClient, error)
 }
 
 type rankServiceClient struct {
@@ -37,6 +41,33 @@ func NewRankServiceClient(cc grpc.ClientConnInterface) RankServiceClient {
 func (c *rankServiceClient) Register(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalInformation, error) {
 	out := new(PersonalInformation)
 	err := c.cc.Invoke(ctx, "/RankService/Register", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rankServiceClient) Update(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalInformationFatRate, error) {
+	out := new(PersonalInformationFatRate)
+	err := c.cc.Invoke(ctx, "/RankService/Update", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rankServiceClient) GetFatRate(ctx context.Context, in *PersonalInformation, opts ...grpc.CallOption) (*PersonalRank, error) {
+	out := new(PersonalRank)
+	err := c.cc.Invoke(ctx, "/RankService/GetFatRate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *rankServiceClient) GetTop(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*PersonalRanks, error) {
+	out := new(PersonalRanks)
+	err := c.cc.Invoke(ctx, "/RankService/GetTop", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,12 +108,48 @@ func (x *rankServiceRegisterPersonsClient) CloseAndRecv() (*PersonalInformationL
 	return m, nil
 }
 
+func (c *rankServiceClient) WatchPersons(ctx context.Context, in *Empty, opts ...grpc.CallOption) (RankService_WatchPersonsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &RankService_ServiceDesc.Streams[1], "/RankService/WatchPersons", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &rankServiceWatchPersonsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type RankService_WatchPersonsClient interface {
+	Recv() (*PersonalInformation, error)
+	grpc.ClientStream
+}
+
+type rankServiceWatchPersonsClient struct {
+	grpc.ClientStream
+}
+
+func (x *rankServiceWatchPersonsClient) Recv() (*PersonalInformation, error) {
+	m := new(PersonalInformation)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // RankServiceServer is the server API for RankService service.
 // All implementations must embed UnimplementedRankServiceServer
 // for forward compatibility
 type RankServiceServer interface {
 	Register(context.Context, *PersonalInformation) (*PersonalInformation, error)
+	Update(context.Context, *PersonalInformation) (*PersonalInformationFatRate, error)
+	GetFatRate(context.Context, *PersonalInformation) (*PersonalRank, error)
+	GetTop(context.Context, *Empty) (*PersonalRanks, error)
 	RegisterPersons(RankService_RegisterPersonsServer) error
+	WatchPersons(*Empty, RankService_WatchPersonsServer) error
 	mustEmbedUnimplementedRankServiceServer()
 }
 
@@ -93,8 +160,20 @@ type UnimplementedRankServiceServer struct {
 func (UnimplementedRankServiceServer) Register(context.Context, *PersonalInformation) (*PersonalInformation, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
+func (UnimplementedRankServiceServer) Update(context.Context, *PersonalInformation) (*PersonalInformationFatRate, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedRankServiceServer) GetFatRate(context.Context, *PersonalInformation) (*PersonalRank, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFatRate not implemented")
+}
+func (UnimplementedRankServiceServer) GetTop(context.Context, *Empty) (*PersonalRanks, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTop not implemented")
+}
 func (UnimplementedRankServiceServer) RegisterPersons(RankService_RegisterPersonsServer) error {
 	return status.Errorf(codes.Unimplemented, "method RegisterPersons not implemented")
+}
+func (UnimplementedRankServiceServer) WatchPersons(*Empty, RankService_WatchPersonsServer) error {
+	return status.Errorf(codes.Unimplemented, "method WatchPersons not implemented")
 }
 func (UnimplementedRankServiceServer) mustEmbedUnimplementedRankServiceServer() {}
 
@@ -127,6 +206,60 @@ func _RankService_Register_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RankService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalInformation)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RankServiceServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RankService/Update",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RankServiceServer).Update(ctx, req.(*PersonalInformation))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RankService_GetFatRate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalInformation)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RankServiceServer).GetFatRate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RankService/GetFatRate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RankServiceServer).GetFatRate(ctx, req.(*PersonalInformation))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RankService_GetTop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RankServiceServer).GetTop(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/RankService/GetTop",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RankServiceServer).GetTop(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RankService_RegisterPersons_Handler(srv interface{}, stream grpc.ServerStream) error {
 	return srv.(RankServiceServer).RegisterPersons(&rankServiceRegisterPersonsServer{stream})
 }
@@ -153,6 +286,27 @@ func (x *rankServiceRegisterPersonsServer) Recv() (*PersonalInformation, error) 
 	return m, nil
 }
 
+func _RankService_WatchPersons_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(RankServiceServer).WatchPersons(m, &rankServiceWatchPersonsServer{stream})
+}
+
+type RankService_WatchPersonsServer interface {
+	Send(*PersonalInformation) error
+	grpc.ServerStream
+}
+
+type rankServiceWatchPersonsServer struct {
+	grpc.ServerStream
+}
+
+func (x *rankServiceWatchPersonsServer) Send(m *PersonalInformation) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // RankService_ServiceDesc is the grpc.ServiceDesc for RankService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -164,12 +318,29 @@ var RankService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "Register",
 			Handler:    _RankService_Register_Handler,
 		},
+		{
+			MethodName: "Update",
+			Handler:    _RankService_Update_Handler,
+		},
+		{
+			MethodName: "GetFatRate",
+			Handler:    _RankService_GetFatRate_Handler,
+		},
+		{
+			MethodName: "GetTop",
+			Handler:    _RankService_GetTop_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "RegisterPersons",
 			Handler:       _RankService_RegisterPersons_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "WatchPersons",
+			Handler:       _RankService_WatchPersons_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "types.proto",
